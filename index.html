@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>solved.ac 초성퀴즈</title>
+    <style>
+        body { text-align: center; font-family: Arial, sans-serif; margin-top: 50px; }
+        .word { font-size: 24px; font-weight: bold; }
+        .title { font-size: 36px; font-weight: bold; }
+        input { font-size: 18px; padding: 5px; margin-top: 10px; }
+        .message { margin-top: 10px; font-size: 18px; }
+        .scoreboard { font-size: 18px; margin-bottom: 20px; }
+        .hint-button { margin-top: 10px; font-size: 16px; padding: 5px 10px; cursor: pointer; }
+    </style>
+</head>
+<body>
+    <div class="title">solved.ac 태그 맞히기</div>
+    <div class="scoreboard" id="scoreboard"></div>
+    <div class="word" id="quizWord"></div>
+    <input type="text" id="typingInput" placeholder="정답 입력...">
+    <button class="hint-button" id="hintButton">힌트</button>
+    <button class="hint-button" id="skipButton">스킵</button>
+    <div class="message" id="message"></div>
+
+    <script>
+        const wordList = ["수학", "구현", "다이나믹 프로그래밍", "자료 구조", "그래프 이론", "그리디 알고리즘", "문자열", "브루트포스 알고리즘", "그래프 탐색", "정렬", "기하학", "애드 혹", "정수론", "트리", "세그먼트 트리", "이분 탐색", "사칙연산", "시뮬레이션", "해 구성하기", "너비 우선 탐색", "누적 합", "조합론", "많은 조건 분기", "깊이 우선 탐색", "비트마스킹", "해시를 사용한 집합과 맵", "데이크스트라", "백트래킹", "최단 경로", "트리를 사용한 집합과 맵", "분리 집합", "스위핑", "파싱", "우선순위 큐", "분할 정복", "트리에서의 다이나믹 프로그래밍", "두 포인터", "스택", "매개 변수 탐색", "게임 이론", "최대 유량", "소수 판정", "확률론", "비트필드를 이용한 다이나믹 프로그래밍", "느리게 갱신되는 세그먼트 트리", "분할 정복을 이용한 거듭제곱", "임의 정밀도 / 큰 수 연산", "오프라인 쿼리", "배낭 문제", "재귀", "값 / 좌표 압축", "런타임 전의 전처리", "최소 스패닝 트리", "에라토스테네스의 체", "유클리드 호제법", "이분 매칭", "볼록 껍질", "선형대수학", "위상 정렬", "플로이드-워셜", "해싱", "최소 공통 조상", "포함 배제의 원리", "강한 연결 요소", "무작위화", "희소 배열", "방향 비순환 그래프", "작은 집합에서 큰 집합으로 합치는 테크닉", "고속 푸리에 변환", "트라이", "덱", "선분 교차 판정", "최소 비용 최대 유량", "제곱근 분할법", "미적분학", "모듈로 곱셈 역원", "슬라이딩 윈도우", "휴리스틱", "볼록 껍질을 이용한 최적화", "3차원 기하학", "접미사 배열과 lcp 배열", "오일러 경로 테크닉", "센트로이드", "스프라그-그런디 정리", "삼분 탐색", "중간에서 만나기", "비트 집합", "피타고라스 정리", "순열 사이클 분할", "kmp", "가장 긴 증가하는 부분 수열: o(n log n)", "가우스 소거법", "heavy-light 분할", "센트로이드 분할", "다각형의 넓이 ", "최대 유량 최소 컷 정리", "큐", "물리학", "페르마의 소정리", "오일러 경로", "외판원 순회 문제", "기댓값의 선형성", "2-sat", "단절점과 단절선", "0-1 너비 우선 탐색", "이분 그래프", "이중 연결 요소", "퍼시스턴트 세그먼트 트리", "중국인의 나머지 정리", "연결 리스트", "선인장", "비둘기집 원리", "벨만-포드", "평면 그래프", "볼록 다각형 내부의 점 판정", "오일러 피 함수", "스플레이 트리", "확장 유클리드 호제법", "분할 정복을 사용한 최적화", "mo's", "병렬 이분 탐색", "반평면 교집합", "아호-코라식", "회전하는 캘리퍼스", "덱을 이용한 다이나믹 프로그래밍", "오일러 지표 (χ=v-e+f)", "다차원 세그먼트 트리", "정규 표현식", "함수 개형을 이용한 최적화", "벌리캠프-매시", "매내처", "덱을 이용한 구간 최댓값 트릭", "폴라드 로", "커넥션 프로파일을 이용한 다이나믹 프로그래밍", "밀러-라빈 소수 판별법", "링크/컷 트리", "트리 동형 사상", "머지 소트 트리", "담금질 기법", "플러드 필", "뫼비우스 반전 공식", "홀의 결혼 정리", "헝가리안", "오목 다각형 내부의 점 판정", "라빈-카프", "수치해석", "오프라인 동적 연결성 판정", "선형 계획법", "aliens 트릭", "생성 함수", "함수형 그래프", "통계학", "서큘레이션", "트리 압축", "부분집합의 합 다이나믹 프로그래밍", "보로노이 다이어그램", "쌍대 그래프", "자릿수를 이용한 다이나믹 프로그래밍", "매트로이드", "뤼카 정리", "쌍대성", "키타마사", "일반적인 매칭", "데카르트 트리", "트리 분할", "번사이드 보조정리", "양방향 탐색", "4차원 이상의 기하학", "이산 로그", "최소 외접원", "회문 트리", "z", "탑 트리", "단조 큐를 이용한 최적화", "픽의 정리", "utf-8 입력 처리", "델로네 삼각분할", "도미네이터 트리", "크누스 x", "차분 공격", "안정 결혼 문제", "크누스 최적화", "베이즈 정리", "로프", "춤추는 링크", "차수열", "도형에서의 불 연산", "이산 제곱근", "히르쉬버그", "접미사 트리", "현 그래프", "경사 하강법", "다항식 보간법", "린드스트롬-게셀-비엔노 보조정리", "유향 최소 신장 트리", "스토어-바그너", "그린 정리", "보이어-무어 다수결 투표", "다중 대입값 계산", "생일 문제", "하켄부시 게임", "지수승강 보조정리", "레드-블랙 트리", "이산 k제곱근", "유리 등차수열의 내림 합"];;
+        let remainingWords = [...wordList];
+        let answeredWords = [];
+        let currentWord = "";
+        let displayedChosung = "";
+        let revealedIndexes = new Set();
+
+        function getChosung(word) {
+            const CHO = ["ㄱ", "ㄲ", "ㄴ", "ㄷ", "ㄸ", "ㄹ", "ㅁ", "ㅂ", "ㅃ", "ㅅ", "ㅆ", "ㅇ", "ㅈ", "ㅉ", "ㅊ", "ㅋ", "ㅌ", "ㅍ", "ㅎ"];
+            return word.split('').map(char => {
+                const code = char.charCodeAt(0) - 44032;
+                if (code >= 0 && code <= 11171) {
+                    return CHO[Math.floor(code / 588)];
+                }
+                return char;
+            }).join('');
+        }
+
+        function updateScoreboard() {
+            /*let s = "";
+            for (let i = 0; i < answeredWords.length; i++) {
+                s += `${answeredWords[i]} (${i+1}/${wordList.length})\n<br>`;
+            }*/
+            //document.getElementById("scoreboard").innerHTML = s;
+            document.getElementById("scoreboard").innerHTML = answeredWords.join(", ") + `<br>(${answeredWords.length}/${wordList.length})`
+        }
+
+        function setNewWord() {
+            if (remainingWords.length === 0) {
+                document.getElementById("quizWord").textContent = "축하합니다!";
+                document.getElementById("quizWord").style.color = "green";
+                document.getElementById("message").textContent = "모든 단어를 맞혔습니다!";
+                document.getElementById("message").style.color = "green";
+                return;
+            }
+            currentWord = remainingWords.splice(Math.floor(Math.random() * remainingWords.length), 1)[0];
+            displayedChosung = getChosung(currentWord);
+            revealedIndexes.clear();
+            document.getElementById("quizWord").textContent = displayedChosung;
+            document.getElementById("message").textContent = "";
+        }
+
+        function revealHint() {
+            let unrevealedIndexes = [...displayedChosung].map((_, i) => i).filter(i => !revealedIndexes.has(i));
+            if (unrevealedIndexes.length > 0) {
+                let indexToReveal = unrevealedIndexes[Math.floor(Math.random() * unrevealedIndexes.length)];
+                revealedIndexes.add(indexToReveal);
+                let updatedDisplay = displayedChosung.split('').map((char, i) => revealedIndexes.has(i) ? currentWord[i] : char).join('');
+                document.getElementById("quizWord").textContent = updatedDisplay;
+            }
+        }
+        
+        function skipHint() {
+            answeredWords.push(currentWord);
+            updateScoreboard();
+            setNewWord();
+            message.textContent = "";
+        }
+
+        document.getElementById("typingInput").addEventListener("keypress", function(event) {
+            if (event.key === "Enter") {
+                let inputText = this.value.trim().replaceAll(' ','');
+                let message = document.getElementById("message");
+                
+                if (inputText === currentWord.replaceAll(' ','')) {
+                    answeredWords.push(currentWord);
+                    updateScoreboard();
+                    setNewWord();
+                    message.textContent = "맞았습니다!";
+                    message.style.color = "green";
+                } else {
+                    message.textContent = "틀렸습니다";
+                    message.style.color = "red";
+                }
+                this.value = "";
+            }
+        });
+
+        document.getElementById("hintButton").addEventListener("click", revealHint);
+        document.getElementById("skipButton").addEventListener("click", skipHint);
+        updateScoreboard();
+        setNewWord();
+    </script>
+</body>
+</html>
+
+
