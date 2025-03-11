@@ -52,10 +52,11 @@
         }
 
         function setNewWord() {
+            console.log(remainingWords.length)
             if (remainingWords.length === 0) {
                 document.getElementById("quizWord").textContent = "축하합니다!";
                 document.getElementById("quizWord").style.color = "green";
-                document.getElementById("message").textContent = "모든 단어를 맞혔습니다!";
+                document.getElementById("message").textContent = "모든 태그를 맞혔습니다!";
                 document.getElementById("message").style.color = "green";
                 return;
             }
@@ -67,6 +68,7 @@
         }
 
         function revealHint() {
+            if (wordList.length === answeredWords.length) return;
             let unrevealedIndexes = [...displayedChosung].map((_, i) => i).filter(i => !revealedIndexes.has(i));
             if (unrevealedIndexes.length > 0) {
                 let indexToReveal = unrevealedIndexes[Math.floor(Math.random() * unrevealedIndexes.length)];
@@ -77,14 +79,19 @@
         }
         
         function skipHint() {
+            if (wordList.length === answeredWords.length) return;
             answeredWords.push(currentWord);
             updateScoreboard();
+            document.getElementById("message").textContent = "";
             setNewWord();
-            message.textContent = "";
         }
 
         document.getElementById("typingInput").addEventListener("keypress", function(event) {
             if (event.key === "Enter") {
+                if (wordList.length === answeredWords.length) {
+                    this.value = "";
+                    return;
+                }
                 let inputText = this.value.trim().replaceAll(' ','');
                 let message = document.getElementById("message");
                 
@@ -92,8 +99,10 @@
                     answeredWords.push(currentWord);
                     updateScoreboard();
                     setNewWord();
-                    message.textContent = "맞았습니다!";
-                    message.style.color = "green";
+                    if (remainingWords.length !== 0) {
+                        message.textContent = "맞았습니다!";
+                        message.style.color = "green";
+                    }
                 } else {
                     message.textContent = "틀렸습니다";
                     message.style.color = "red";
